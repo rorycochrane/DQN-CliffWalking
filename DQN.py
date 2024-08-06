@@ -1,6 +1,6 @@
 import gymnasium as gym
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import random
 from collections import deque
 import torch
@@ -99,7 +99,7 @@ class DQNAgent:
             for valid_state in self.valid_states:
                 action_scores = agent.q_network(torch.FloatTensor(agent.one_hot(valid_state)).unsqueeze(0)).detach().numpy()[0]
                 for i in range(4):
-                    error += abs(action_scores[i] - ground_truth_by_state[valid_state][i])
+                    error += abs(action_scores[i] - true_values[valid_state][i])
             errors.append(error)
                     
             self.update_target_network()
@@ -113,6 +113,47 @@ class DQNAgent:
 
     def save(self, name):
         torch.save(self.target_network.state_dict(), name)
+
+
+true_values = [
+        [-15.0, -14.0, -14.0, -15.0],
+        [-14.0, -13.0, -13.0, -15.0],
+        [-13.0, -12.0, -12.0, -14.0],
+        [-12.0, -11.0, -11.0, -13.0],
+        [-11.0, -10.0, -10.0, -12.0],
+        [-10.0, -9.0, -9.0, -11.0],
+        [-9.0, -8.0, -8.0, -10.0],
+        [-8.0, -7.0, -7.0, -9.0],
+        [-7.0, -6.0, -6.0, -8.0],
+        [-6.0, -5.0, -5.0, -7.0],
+        [-5.0, -4.0, -4.0, -6.0],
+        [-4.0, -4.0, -3.0, -5.0],
+        [-15.0, -13.0, -13.0, -14.0],
+        [-14.0, -12.0, -12.0, -14.0],
+        [-13.0, -11.0, -11.0, -13.0],
+        [-12.0, -10.0, -10.0, -12.0],
+        [-11.0, -9.0, -9.0, -11.0],
+        [-10.0, -8.0, -8.0, -10.0],
+        [-9.0, -7.0, -7.0, -9.0],
+        [-8.0, -6.0, -6.0, -8.0],
+        [-7.0, -5.0, -5.0, -7.0],
+        [-6.0, -4.0, -4.0, -6.0],
+        [-5.0, -3.0, -3.0, -5.0],
+        [-4.0, -3.0, -2.0, -4.0],
+        [-14.0, -12.0, -14.0, -13.0],
+        [-13.0, -11.0, -113.0, -13.0],
+        [-12.0, -10.0, -113.0, -12.0],
+        [-11.0, -9.0, -113.0, -11.0],
+        [-10.0, -8.0, -113.0, -10.0],
+        [-9.0, -7.0, -113.0, -9.0],
+        [-8.0, -6.0, -113.0, -8.0],
+        [-7.0, -5.0, -113.0, -7.0],
+        [-6.0, -4.0, -113.0, -6.0],
+        [-5.0, -3.0, -113.0, -5.0],
+        [-4.0, -2.0, -113.0, -4.0],
+        [-3.0, -2.0, -1.0, -3.0],
+        [-13.0, -113.0, -14.0, -14.0]
+    ]
 
 
 if __name__ == '__main__':
