@@ -1,6 +1,6 @@
 import gymnasium as gym
 import numpy as np
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import random
 from collections import deque
 import torch
@@ -14,13 +14,28 @@ class QNetwork(nn.Module):
         super(QNetwork, self).__init__()
         self.fc1 = nn.Linear(37, 12)
         self.fc2 = nn.Linear(12, 12)
-        self.fc3 = nn.Linear(12, 4)  # 4 possible actions: left, right, up, down
+        self.fc3 = nn.Linear(12, 4)  
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
+    
+class DuelingQNetwork(nn.Module):
+    def __init__(self):
+        super(QNetwork, self).__init__()
+        self.fc1 = nn.Linear(37, 12)
+        self.fc2 = nn.Linear(12, 12)
+        self.fc3 = nn.Linear(12, 4)  
+        self.value = nn.Linear(12,1)
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        values = self.value(x)
+        advantages = self.fc3(x)
+        return values + (advantages - advantages.mean())
     
 
 class DQNAgent:
@@ -162,3 +177,5 @@ if __name__ == '__main__':
     agent = DQNAgent()
     episodes = 200 
     scores, errors = agent.train(env, episodes)
+
+    plt.plot(errors)
